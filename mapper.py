@@ -3,10 +3,10 @@ import sys
 import operator
 import re
 #  SELECT group, COUNT(group) FROM products GROUP BY group HAVING COUNT(group)>3
-f=open("resultjson.txt")
+#f=open("resultjson.txt")
 import json
 i=0;
-f2=open("mapperip.txt")
+f2=open("/home/aurav/code/python/hadoop/pro/mapperip.txt")
 l=f2.readline()
 config=json.loads(l)
 #print(config['columns'])
@@ -59,8 +59,8 @@ for li in sys.stdin:
 	else:
 		ha=line[hav]
 	if(len(se)==0):
-		print("{}\t{}\t{}".format("*",ha, agg_cols))
+		print("{}###{}\t{}".format("*",ha, agg_cols))
 	else:
-		print("{}\t{}\t{}".format(",".join(sel_cols),ha, agg_cols))
+		print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

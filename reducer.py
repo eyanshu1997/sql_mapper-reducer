@@ -4,7 +4,7 @@ import sys
 import json
 import operator
 import re
-f2=open("mapperip.txt")
+f2=open("/home/aurav/code/python/hadoop/pro/mapperip.txt")
 l=f2.readline()
 config=json.loads(l)
 res={}
@@ -41,13 +41,14 @@ def oper(val):
 for line in sys.stdin:
 	line = line.strip()
 	line = line.split('\t')
+	lin=line[0].split('###')
 	#print(line)
-	if line[2] in res:
-		havar[str(line[2])].append(str(line[1]))
-		res[str(line[2])].append(str(line[0]))
+	if line[1] in res:
+		havar[str(line[1])].append(str(lin[1]))
+		res[str(line[1])].append(str(lin[0]))
 	else:
-		havar[str(line[2])] = [str(line[1])]
-		res[str(line[2])] = [str(line[0])]
+		havar[str(line[1])] = [str(lin[1])]
+		res[str(line[1])] = [str(lin[0])]
 #print(res)
 ope=None
 col=None

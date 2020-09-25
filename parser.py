@@ -78,6 +78,8 @@ def parse_query(query):
 	#print(compar)
 	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"wlhs":wlhs,"wo":wo,"wrhs":wrhs,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
+#	 bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file '/home/aurav/code/python/hadoop/pro/mapper.py' -mapper '/home/aurav/code/python/hadoop/pro/mapper.py' -file '/home/aurav/code/python/hadoop/pro/reducer.py' -reducer '/home/aurav/code/python/hadoop/pro/reducer.py' -input /user/eyanshu/smalldata.txt -output /user/eyanshu/out 
+
 	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
 	#start= time.time()
 	#os.system(command)
