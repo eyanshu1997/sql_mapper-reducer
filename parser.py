@@ -34,11 +34,15 @@ def parse_query(query):
 	where=str(where)
 	whe,group=re.split("GROUPBY ",where)
 	wh,where=whe.split()
+	if(where=="*"):
+		where="*"
+	else:
+		where=extractlhs_and_rhs(str(where))
 	columns=str(columns)
 	columns=columns.split(",")
 	column=[]
 	compar=extractlhs_and_rhs(str(compar))
-	where=extractlhs_and_rhs(str(where))
+
 	for co in columns:
 		column.append(co)
 	#print(column)
