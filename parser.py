@@ -24,7 +24,16 @@ def extractlhs_and_rhs(exp):
 		if exp.find(o)!=-1:
 			lhs,rhs=exp.split(o)
 			return lhs.rstrip().lstrip(),o,rhs.rstrip().lstrip()
-		
+def extractfunccol(lhs):
+	agg=["SUM","COUNT","MAX","MIN","AVG"]
+	hav=None
+	col=None
+	for y in agg:
+		if y in lhs:
+			a,b=re.split(y,lhs)
+			e,f=re.split("\(",b)
+			c,d=re.split("\)",f)
+			return y,c
 def parse_query(query):
 	parsed=sqlparse.parse(query.upper().rstrip().lstrip())
 	stmt=parsed[0]
@@ -50,7 +59,7 @@ def parse_query(query):
 	columns=columns.split(",")
 	column=[]
 	lhs,o,rhs=extractlhs_and_rhs(str(compar))
-
+	func,agg=extractfunccol(lhs)
 	for co in columns:
 		column.append(co.lstrip().rstrip())
 	#print(column)
@@ -58,7 +67,7 @@ def parse_query(query):
 	#print(where)
 	#print(group)
 	#print(compar) 
-	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"where":where,"group":str(group).lstrip().rstrip(),"lhs":lhs,"op":o,"rhs":rhs}
+	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"where":where,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
 	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
 	#start= time.time()

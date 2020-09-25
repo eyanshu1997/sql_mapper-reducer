@@ -15,28 +15,17 @@ sel=config['columns']
 #print(sel)
 se=[]
 agg_col=config['group']
-agg=["SUM","COUNT","MAX","MIN","AVG"]
-hav=None
+hav=config['agg']
 for x in sel:
-	set=False
-	for y in agg:
-		if y in x:
-			a,b=re.split(y,x)
-			e,f=re.split("\(",b)
-			c,d=re.split("\)",f)
-			#se.append(c)
-			hav=c
-			set=True
-			continue
-	if(set==False):
-		if x != agg_col:
-			se.append(x)
+	if hav not in x:
+		se.append(x)
+#se=[x in sel if x!=agg_col]
 #print(se)
-
+#print(hav)
 #print(agg_col)
 import sys
 for li in sys.stdin:
-	if(i==5):
+	if(i==200):
 		exit()
 	line=json.loads(li)
 	i=i+1
