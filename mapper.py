@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import re
 #  SELECT group, COUNT(group) FROM products GROUP BY group HAVING COUNT(group)>3
 f=open("resultjson.txt")
@@ -10,9 +12,11 @@ config=json.loads(l)
 
 sel=config['columns']
 
-print(sel)
+#print(sel)
 se=[]
+agg_col=config['group']
 agg=["SUM","COUNT","MAX","MIN","AVG"]
+hav=None
 for x in sel:
 	set=False
 	for y in agg:
@@ -20,17 +24,19 @@ for x in sel:
 			a,b=re.split(y,x)
 			e,f=re.split("\(",b)
 			c,d=re.split("\)",f)
-			se.append(c)
+			#se.append(c)
+			hav=c
 			set=True
 			continue
 	if(set==False):
-		se.append(x)
+		if x != agg_col:
+			se.append(x)
 #print(se)
-agg_col=config['group']
-print(agg_col)
+
+#print(agg_col)
 import sys
 for li in sys.stdin:
-	if(i==4):
+	if(i==5):
 		exit()
 	line=json.loads(li)
 	i=i+1
@@ -39,6 +45,7 @@ for li in sys.stdin:
 		continue
 	sel_cols = [line[x] for x in se]
 	agg_cols = line[agg_col]
-	print("{}\t{}".format(",".join(sel_cols), agg_cols))
+	ha=line[hav]
+	print("{}\t{}\t{}".format(",".join(sel_cols),ha, agg_cols))
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

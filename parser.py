@@ -23,10 +23,10 @@ def extractlhs_and_rhs(exp):
 	for o in al_op:
 		if exp.find(o)!=-1:
 			lhs,rhs=exp.split(o)
-			return {"lhs":lhs.rstrip(),"op":o,"rhs":rhs.rstrip()}
+			return lhs.rstrip().lstrip(),o,rhs.rstrip().lstrip()
 		
 def parse_query(query):
-	parsed=sqlparse.parse(query.upper().rstrip())
+	parsed=sqlparse.parse(query.upper().rstrip().lstrip())
 	stmt=parsed[0]
 	columns=stmt.tokens[2]
 	tables=stmt.tokens[6]
@@ -49,18 +49,18 @@ def parse_query(query):
 	columns=str(columns)
 	columns=columns.split(",")
 	column=[]
-	compar=extractlhs_and_rhs(str(compar))
+	lhs,o,rhs=extractlhs_and_rhs(str(compar))
 
 	for co in columns:
-		column.append(co)
+		column.append(co.lstrip().rstrip())
 	#print(column)
 	#print(tables)
 	#print(where)
 	#print(group)
 	#print(compar) 
-	data={"columns":column,"tables":str(tables),"where":where,"group":str(group),"compar":compar}
+	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"where":where,"group":str(group).lstrip().rstrip(),"lhs":lhs,"op":o,"rhs":rhs}
 	write_to_file( data)
-	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mrmapper/groupby_mapper.py" -reducer "python mrmapper/groupby_reducer.py" -input /{input}/{table}.csv -output /{parent}/{outputdir}'.format(table=queryset.fromtable, input=self.input, parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
+	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
 	#start= time.time()
 	#os.system(command)
 	#time_delta = time.time() - start

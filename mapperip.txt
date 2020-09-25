@@ -1,1 +1,1 @@
-{"columns": ["PID", "TITLE", "MIN(SALESRANK)"], "tables": "PRODUCTS", "where": "*", "group": "PID", "compar": {"lhs": "MIN(SALESRANK)", "op": ">", "rhs": " 100000"}}
+{"columns": ["PID", "TITLE", "MIN(SALESRANK)"], "tables": "PRODUCTS", "where": "*", "group": "PID", "lhs": "MIN(SALESRANK)", "op": ">", "rhs": "200000"}
