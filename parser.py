@@ -49,9 +49,14 @@ def parse_query(query):
 	#print(tables)
 	#print(where)
 	#print(group)
-	#print(compar)
-	return write_to_file( {"columns":str(column),"tables":str(tables),"where":str(where),"group":str(group),"compar":str(compar)})
-	
+	#print(compar) 
+	data={"columns":str(column),"tables":str(tables),"where":str(where),"group":str(group),"compar":str(compar)}
+	write_to_file( data)
+	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mrmapper/groupby_mapper.py" -reducer "python mrmapper/groupby_reducer.py" -input /{input}/{table}.csv -output /{parent}/{outputdir}'.format(table=queryset.fromtable, input=self.input, parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
+	#start= time.time()
+	#os.system(command)
+	#time_delta = time.time() - start
+	return data
 
 class RunQuery(Resource):
     def get(self):
