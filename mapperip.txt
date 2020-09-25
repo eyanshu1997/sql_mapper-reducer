@@ -1,1 +1,1 @@
-{"columns": "['MOVIEID', 'SUM(RATING)']", "tables": "RATING", "where": "{'lhs': '5.0', 'op': '=', 'rhs': 'RATING'}", "group": "MOVIEID ", "compar": "{'lhs': ' 1000', 'op': '>', 'rhs': 'SUM(RATING)'}"}
+{"columns": ["PID", "TITLE", "MIN(SALESRANK)"], "tables": "PRODUCTS", "where": "*", "group": "PID", "compar": {"lhs": "MIN(SALESRANK)", "op": ">", "rhs": " 100000"}}

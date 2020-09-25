@@ -15,25 +15,33 @@ ps.add_argument('query')
 def write_to_file(data):
 	fil=open("mapperip.txt","w")
 	json.dump(data,fil)
+#	fil.wrtie("\n");
 	fil.close()
 	return data
 def extractlhs_and_rhs(exp):
-	al_op = ['<=', '<', '=', '>', '>=']
+	al_op = ['<=', '<', '=', '>', '>=','!=']
 	for o in al_op:
 		if exp.find(o)!=-1:
-			rhs,lhs=exp.split(o)
+			lhs,rhs=exp.split(o)
 			return {"lhs":lhs.rstrip(),"op":o,"rhs":rhs.rstrip()}
 		
 def parse_query(query):
-	parsed=sqlparse.parse(query.upper())
+	parsed=sqlparse.parse(query.upper().rstrip())
 	stmt=parsed[0]
 	columns=stmt.tokens[2]
 	tables=stmt.tokens[6]
 	where=stmt.tokens[8]
+	group=stmt.tokens[11]
 	compar=stmt.tokens[-1]
 	where=str(where)
-	whe,group=re.split("GROUPBY ",where)
-	wh,where=whe.split()
+	print(stmt.tokens)
+	print(where)
+	print(columns)
+	print(tables)
+	print(group)
+	print(compar) 
+	#whe,group=re.split("GROUP BY ",where)
+	wh,where=where.split()
 	if(where=="*"):
 		where="*"
 	else:
@@ -50,7 +58,7 @@ def parse_query(query):
 	#print(where)
 	#print(group)
 	#print(compar) 
-	data={"columns":str(column),"tables":str(tables),"where":str(where),"group":str(group),"compar":str(compar)}
+	data={"columns":column,"tables":str(tables),"where":where,"group":str(group),"compar":compar}
 	write_to_file( data)
 	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mrmapper/groupby_mapper.py" -reducer "python mrmapper/groupby_reducer.py" -input /{input}/{table}.csv -output /{parent}/{outputdir}'.format(table=queryset.fromtable, input=self.input, parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
 	#start= time.time()
