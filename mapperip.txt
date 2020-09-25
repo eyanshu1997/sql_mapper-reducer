@@ -1,1 +1,1 @@
-{"columns": ["PID", "ASIN", "TITLE"], "tables": "PRODUCT", "wlhs": "PID", "wo": "==", "wrhs": "2", "group": "PID", "func": "*", "agg": "*", "op": "*", "rhs": "*"}
+{"columns": ["TIME"], "tables": "REVIEWS", "wlhs": "HELPFUL", "wo": ">", "wrhs": "4", "group": "TIME", "func": "COUNT", "agg": "VOTES", "op": "<", "rhs": "8"}
