@@ -50,14 +50,15 @@ for li in sys.stdin:
 			x=None
 			y=None
 			#print(line)
-			if(wlhs in intval):
-				x=int(line[wlhs])
-				y=int(wrhs)
-			else:
-				x=str(line(wlhs))
-				y=str(wrhs)
-			if(not oper(x,y,wo)):
-				continue	
+			if wlhs!="*":
+				if(wlhs in intval):
+					x=int(line[wlhs])
+					y=int(wrhs)
+				else:
+					x=str(line[wlhs])
+					y=str(wrhs)
+				if(not oper(x,y,wo)):
+					continue	
 			sel_cols = [line[x] for x in se]
 			agg_cols = line[agg_col]
 			if(hav=="*"):
@@ -73,14 +74,15 @@ for li in sys.stdin:
 		x=None
 		y=None
 		print(wlhs)
-		if(wlhs in intval):
-			x=int(line[wlhs])
-			y=int(wrhs)
-		else:
-			x=str(line(wlhs))
-			y=str(wrhs)
-		if(not oper(x,y,wo)):
-			continue	
+		if wlhs!="*":
+			if(wlhs in intval):
+				x=int(line[wlhs])
+				y=int(wrhs)
+			else:
+				x=str(line[wlhs])
+				y=str(wrhs)
+			if(not oper(x,y,wo)):
+				continue	
 		sel_cols = [line[x] for x in se]
 		agg_cols = line[agg_col]
 		if(hav=="*"):

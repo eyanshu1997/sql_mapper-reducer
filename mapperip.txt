@@ -1,1 +1,1 @@
-{"columns": ["TIME"], "tables": "REVIEWS", "wlhs": "HELPFUL", "wo": ">", "wrhs": "4", "group": "TIME", "func": "COUNT", "agg": "VOTES", "op": "<", "rhs": "8"}
+{"columns": ["USERID", "COUNT(USERID)"], "tables": "REVIEWS", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "USERID", "func": "COUNT", "agg": "USERID", "op": "<", "rhs": "5"}
