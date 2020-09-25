@@ -18,7 +18,8 @@ agg_col=config['group']
 hav=config['agg']
 for x in sel:
 	if hav not in x:
-		se.append(x)
+		if x!= agg_col:
+			se.append(x)
 #se=[x in sel if x!=agg_col]
 #print(se)
 #print(hav)
@@ -35,6 +36,9 @@ for li in sys.stdin:
 	sel_cols = [line[x] for x in se]
 	agg_cols = line[agg_col]
 	ha=line[hav]
-	print("{}\t{}\t{}".format(",".join(sel_cols),ha, agg_cols))
+	if(len(se)==0):
+		print("{}\t{}\t{}".format("*",ha, agg_cols))
+	else:
+		print("{}\t{}\t{}".format(",".join(sel_cols),ha, agg_cols))
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

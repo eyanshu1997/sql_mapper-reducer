@@ -14,6 +14,7 @@ func=config["func"]
 op=config["op"]
 #print(config)
 intval=["PID","VOTES","HELPFUL","RATING","SALESRANK"]
+#print(hav)
 def operate(v,ope):
 	if(ope=="SUM"):
 		return sum(v)
@@ -42,11 +43,11 @@ for line in sys.stdin:
 	line = line.split('\t')
 	#print(line)
 	if line[2] in res:
-		havar[int(line[2])].append(line[1])
-		res[int(line[2])].append(line[0])
+		havar[str(line[2])].append(str(line[1]))
+		res[str(line[2])].append(str(line[0]))
 	else:
-		havar[int(line[2])] = [str(line[1])]
-		res[int(line[2])] = [str(line[0])]
+		havar[str(line[2])] = [str(line[1])]
+		res[str(line[2])] = [str(line[0])]
 #print(res)
 ope=None
 col=None
@@ -56,7 +57,10 @@ for k, v in havar.items():
 	#print(val)
 	val=operate(v,func)
 	if oper(val):
-		print("{}\t{}\t {}".format(k,",".join(res[k]), val))
+		if("*"in res[k]):
+			print("{}\t {}".format(k, val))			
+		else:
+			print("{}\t{}\t {}".format(k,",".join(res[k]), val))
 		#print("yes")
 		
 			

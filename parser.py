@@ -66,7 +66,7 @@ def parse_query(query):
 	#print(tables)
 	#print(where)
 	#print(group)
-	#print(compar) 
+	#print(compar)
 	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"where":where,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
 	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)

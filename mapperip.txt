@@ -1,1 +1,1 @@
-{"columns": ["PID", "TITLE", "MIN(SALESRANK)"], "tables": "PRODUCTS", "where": "*", "group": "PID", "func": "MIN", "agg": "SALESRANK", "op": ">", "rhs": "200000"}
+{"columns": ["COUNT(PID)", "GROUP"], "tables": "PRODUCTS", "where": "*", "group": "GROUP", "func": "COUNT", "agg": "PID", "op": ">", "rhs": "2"}
