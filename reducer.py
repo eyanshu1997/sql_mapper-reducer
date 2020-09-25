@@ -27,7 +27,7 @@ def operate(v,ope):
 	if(ope=="AVG"):
 		return sum(v)/len(v)
 def oper(val):
-	choice={ '<':  operator.lt,'<=': operator.le,'>':  operator.gt,'>=': operator.ge,'==': operator.eq,'!=': operator.ne}
+	choice={ '<':  operator.lt,'<=': operator.le,'>':  operator.gt,'>=': operator.ge,'==': operator.eq,'!=': operator.ne,"=":operator.eq}
 	rhs=str(config["rhs"])
 	if hav in intval:
 		rhs=int(rhs)
@@ -52,15 +52,21 @@ for line in sys.stdin:
 ope=None
 col=None
 agg=["SUM","COUNT","MAX","MIN","AVG"]
-
-for k, v in havar.items():
-	#print(val)
-	val=operate(v,func)
-	if oper(val):
-		if("*"in res[k]):
-			print("{}\t {}".format(k, val))			
+if(hav=="*"):
+	for k, v in res.items():
+		if("*" in v):
+			print(k)
 		else:
-			print("{}\t{}\t {}".format(k,",".join(res[k]), val))
+			print("{}\t {}".format(k, v))
+else:
+	for k, v in havar.items():
+		#print(val)
+		val=operate(v,func)
+		if oper(val):
+			if("*"in res[k]):
+				print("{}\t {}".format(k, val))			
+			else:
+				print("{}\t{}\t {}".format(k,",".join(res[k]), val))
 		#print("yes")
 		
 			

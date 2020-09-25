@@ -19,7 +19,7 @@ def write_to_file(data):
 	fil.close()
 	return data
 def extractlhs_and_rhs(exp):
-	al_op = ['<=', '<', '=', '>', '>=','!=']
+	al_op = ['<=', '<', '==', '>', '>=','!=',"="]
 	for o in al_op:
 		if exp.find(o)!=-1:
 			lhs,rhs=exp.split(o)
@@ -43,23 +43,32 @@ def parse_query(query):
 	group=stmt.tokens[11]
 	compar=stmt.tokens[-1]
 	where=str(where)
-	print(stmt.tokens)
-	print(where)
-	print(columns)
-	print(tables)
-	print(group)
-	print(compar) 
-	#whe,group=re.split("GROUP BY ",where)
 	wh,where=where.split()
 	if(where=="*"):
-		where="*"
+		wlhs="*"
+		wo="*"
+		wrhs="*"
 	else:
-		where=extractlhs_and_rhs(str(where))
+		print(where)
+		wlhs,wo,wrhs=extractlhs_and_rhs(str(where))
+		#print(lhs,o,rhs)
 	columns=str(columns)
 	columns=columns.split(",")
 	column=[]
-	lhs,o,rhs=extractlhs_and_rhs(str(compar))
-	func,agg=extractfunccol(lhs)
+	#print(compar)
+	compar=str(compar)
+	if(compar=="*"):
+		func="*"
+		add="*"
+		o="*"
+		rhs="*"
+		agg="*"
+	else:
+		#print(where)
+		#wlhs,wo,wrhs=extractlhs_and_rhs(str(where))
+		#print(lhs,o,rhs)
+		lhs,o,rhs=extractlhs_and_rhs(compar)
+		func,agg=extractfunccol(lhs)
 	for co in columns:
 		column.append(co.lstrip().rstrip())
 	#print(column)
@@ -67,7 +76,7 @@ def parse_query(query):
 	#print(where)
 	#print(group)
 	#print(compar)
-	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"where":where,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
+	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"wlhs":wlhs,"wo":wo,"wrhs":wrhs,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
 	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
 	#start= time.time()
@@ -76,12 +85,11 @@ def parse_query(query):
 	return data
 
 class RunQuery(Resource):
-    def get(self):
-        pass
-
-    def post(self):
-        args = ps.parse_args()
-        query = args['query']
-        return parse_query(query)
+	def get(self):
+		return("use post method")
+	def post(self):
+		args = ps.parse_args()
+		query = args['query']
+		return parse_query(query)
 api.add_resource(RunQuery, '/query')
 app.run(debug=True)
