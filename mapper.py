@@ -30,68 +30,56 @@ intval=["PID","VOTES","HELPFUL","RATING","SALESRANK"]
 def oper(lhs,rhs,op):
 	choice={ '<':  operator.lt,'<=': operator.le,'>':  operator.gt,'>=': operator.ge,'==': operator.eq,'!=': operator.ne,"=":operator.eq}
 	return choice[op](lhs,rhs)
+	
+
+#i=0;	
+def run(line):
+	x=None
+	y=None
+	#print(line)
+	if wlhs!="*":
+		if(wlhs in intval):
+			x=int(line[wlhs])
+			y=int(wrhs)
+		else:
+			x=str(line[wlhs])
+			y=str(wrhs)
+		if(not oper(x,y,wo)):
+			return	
+	sel_cols = [line[x] for x in se]
+	agg_cols = line[agg_col]
+	if(hav=="*"):
+		ha="*"
+	else:
+		ha=line[hav]
+	if(len(se)==0):
+		print("{}###{}\t{}".format("*",ha, agg_cols))
+	else:
+		print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
+		
+	
 for x in sel:
 	if hav not in x:
 		if x!= agg_col:
 			se.append(x)
-#i=0;	
+				
 for li in sys.stdin:
 #	if(i==200):
 #		exit()
 #	i=i+1
 	line=json.loads(li)
-
 	#print(line)
 	if line['TITLE']=="discontinued product":
 		continue
 	if(table=="REVIEWS"):
 		li=line['REVIEWS']
 		for line in li:
-			x=None
-			y=None
-			#print(line)
-			if wlhs!="*":
-				if(wlhs in intval):
-					x=int(line[wlhs])
-					y=int(wrhs)
-				else:
-					x=str(line[wlhs])
-					y=str(wrhs)
-				if(not oper(x,y,wo)):
-					continue	
-			sel_cols = [line[x] for x in se]
-			agg_cols = line[agg_col]
-			if(hav=="*"):
-				ha="*"
-			else:
-				ha=line[hav]
-			if(len(se)==0):
-				print("{}###{}\t{}".format("*",ha, agg_cols))
-			else:
-				print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
+			run(line)
+	elif(table=="SIMILAR"):
+		li=line['SIMILAR']
+		for line in li:
+			run(line)
 	else:
-		print(line)
-		x=None
-		y=None
-		print(wlhs)
-		if wlhs!="*":
-			if(wlhs in intval):
-				x=int(line[wlhs])
-				y=int(wrhs)
-			else:
-				x=str(line[wlhs])
-				y=str(wrhs)
-			if(not oper(x,y,wo)):
-				continue	
-		sel_cols = [line[x] for x in se]
-		agg_cols = line[agg_col]
-		if(hav=="*"):
-			ha="*"
-		else:
-			ha=line[hav]
-		if(len(se)==0):
-			print("{}###{}\t{}".format("*",ha, agg_cols))
-		else:
-			print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
+		run(line)
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

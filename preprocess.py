@@ -35,7 +35,7 @@ def readelement(f):
 	#print(simc)
 	similar=[]
 	for i in range(int(simc)):
-		similar.append(tok[i+1])
+		similar.append({"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"SIMILAR":tok[i+1]})
 	#print(similar.rstrip())
 	cil=f.readline()	
 	x,c=re.split(": ",cil)
@@ -80,6 +80,7 @@ f.readline()
 f.readline()
 write=open("resultjson1.txt","w")
 for i in range(548551):
+#for i in range(10):
 	#f.readline()
 	
 	x=readelement(f)

@@ -64,7 +64,7 @@ else:
 		#print(val)
 		val=operate(v,func)
 		if oper(val):
-			if("*"in res[k]):
+			if("*" in res[k]):
 				print("{}\t {}".format(k, val))			
 			else:
 				print("{}\t{}\t {}".format(k,",".join(res[k]), val))
