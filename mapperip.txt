@@ -1,1 +1,1 @@
-{"columns": ["USERID", "COUNT(USERID)"], "tables": "REVIEWS", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "USERID", "func": "COUNT", "agg": "USERID", "op": "<", "rhs": "5"}
+{"columns": ["ASIN", "COUNT(SIMILAR)"], "tables": "SIMILAR", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "ASIN", "func": "COUNT", "agg": "SIMILAR", "op": "<", "rhs": "3"}

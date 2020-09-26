@@ -26,12 +26,14 @@ def operate(v,ope):
 		return len(v)
 	if(ope=="AVG"):
 		return sum(v)/len(v)
-def oper(val):
+def oper(val,ope):
 	choice={ '<':  operator.lt,'<=': operator.le,'>':  operator.gt,'>=': operator.ge,'==': operator.eq,'!=': operator.ne,"=":operator.eq}
 	rhs=str(config["rhs"])
 	if hav in intval:
 		rhs=int(rhs)
 		val=int(val)
+	if ope =="COUNT":
+		rhs=int(rhs)
 	#print(val,rhs)
 	#print(type(val),type(rhs))
 	return choice[op](val,rhs)
@@ -63,7 +65,7 @@ else:
 	for k, v in havar.items():
 		#print(val)
 		val=operate(v,func)
-		if oper(val):
+		if oper(val,func):
 			if("*" in res[k]):
 				print("{}\t {}".format(k, val))			
 			else:
