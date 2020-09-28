@@ -74,8 +74,9 @@ for li in sys.stdin:
 #	i=i+1
 	line=json.loads(li)
 	#print(line)
-	if line['TITLE']=="discontinued product":
-		continue
+	if "TITLE" in line.keys():
+		if line['TITLE']=="discontinued product":
+			continue
 	run(line)
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'
