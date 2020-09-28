@@ -23,7 +23,7 @@ hav=config['agg']
 #print(agg_col)
 wlhs=config['wlhs']
 wo=config['wo']
-table=config["tables"]
+#table=config["tables"]
 wrhs=config['wrhs']
 intval=["PID","VOTES","HELPFUL","RATING","SALESRANK"]
 
@@ -45,8 +45,13 @@ def run(line):
 			x=str(line[wlhs])
 			y=str(wrhs)
 		if(not oper(x,y,wo)):
-			return	
-	sel_cols = [line[x] for x in se]
+			return
+	sel_cols=[]
+	if("*" in se):
+		for k,v in line.items():
+			sel_cols.append(v);
+	else:
+		sel_cols = [line[x] for x in se]
 	agg_cols = line[agg_col]
 	if(hav=="*"):
 		ha="*"
@@ -71,15 +76,6 @@ for li in sys.stdin:
 	#print(line)
 	if line['TITLE']=="discontinued product":
 		continue
-	if(table=="REVIEWS"):
-		li=line['REVIEWS']
-		for line in li:
-			run(line)
-	elif(table=="SIMILAR"):
-		li=line['SIMILAR']
-		for line in li:
-			run(line)
-	else:
-		run(line)
+	run(line)
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

@@ -1,7 +1,7 @@
 import re
 import json
 elements=[]
-def readelement(f):
+def readelement(f,fcat,frev,fpro,fsim):
 	idl=f.readline()
 	z=re.search("Id:   ",idl)
 	while(z!=None):
@@ -18,8 +18,12 @@ def readelement(f):
 	tl=f.readline()
 	check=re.search("discontinued product",tl)
 	if(check!=None):
+		
 		element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":"discontinued product"}
-		return element
+		json.dump(element,fpro)
+		fpro.write("\n")
+		return
+		#return element
 	x,title=re.split(": ",tl,1)
 	#print(title.rstrip())
 	gl=f.readline()	
@@ -33,17 +37,35 @@ def readelement(f):
 	tok=sim.split()
 	simc=tok[0];
 	#print(simc)
-	similar=[]
+	#similar=[]
 	for i in range(int(simc)):
-		similar.append({"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"SIMILAR":tok[i+1]})
+#		similar.append()
+		z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"SIMILAR":tok[i+1]}
+		json.dump(z,fsim)
+		fsim.write("\n")
 	#print(similar.rstrip())
 	cil=f.readline()	
 	x,c=re.split(": ",cil)
 	#print(c.rstrip())
-	categories=[]
+	#categories=[]
 	for i in range(int(c)):
 		ce=f.readline()
-		categories.append(ce.rstrip())
+		cats=ce.split("|")
+		depth=0
+		pi=0
+		for a in cats:
+			#print(a)
+			if("["in a):
+				#print(a)
+				na,ci=a.rsplit("[",1)
+				ci,x=re.split("\]",ci)
+			#print(na,ci,depth)
+#			categories.append()
+				z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"CATNAME":na,"DEPTH":depth,"CID":ci,"PID":pi}
+				pi=ci
+				json.dump(z,fcat)
+				fcat.write("\n")
+				depth=depth+1
 	#print(categories)
 	cil=f.readline()	
 	r,t,c,d,dc=re.split(": ",cil)
@@ -59,7 +81,7 @@ def readelement(f):
 	#if cound!=count:
 	#	print("error")
 	#	exit()
-	reviews=[]
+	#reviews=[]
 	for i in range(int(cound)):
 		rev=f.readline()
 		ti,cus,ra,vo,he=re.split(": ",rev)
@@ -70,22 +92,30 @@ def readelement(f):
 		helpful=he.rstrip();
 		#print(time,customer,rating,votes,helpful)
 		
-		reviews.append({"ASIN":amazonid.rstrip(),"TIME":time,"PID":id.rstrip(),"USERID":customer,"RATING":rating,"VOTES":votes,"HELPFUL":helpful})
+		z={"ASIN":amazonid.rstrip(),"TIME":time,"PID":id.rstrip(),"USERID":customer,"RATING":rating,"VOTES":votes,"HELPFUL":helpful}
+		json.dump(z,frev)
+		frev.write("\n")
 	#print(reviews)
-	element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":title.rstrip(),"GROUP":group.rstrip(),"SALESRANK":srank.rstrip(),"SIMILAR":similar,"CATEGORIES":categories,"REVIEWS":reviews}
-	return element	
+	#element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":title.rstrip(),"GROUP":group.rstrip(),"SALESRANK":srank.rstrip(),"SIMILAR":similar,"CATEGORIES":categories,"REVIEWS":reviews}
+	element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":title.rstrip(),"GROUP":group.rstrip(),"SALESRANK":srank.rstrip()}
+	json.dump(element,fpro)
+	fpro.write("\n")
+	#return element	
 f=open("/home/aurav/Downloads/amazon-meta.txt","rt")
 
 f.readline()
 f.readline()
-write=open("resultjson1.txt","w")
+fcat=open("data/categories.txt","w")
+frev=open("data/reviews.txt","w")
+fpro=open("data/products.txt","w")
+fsim=open("data/similar.txt","w")
 for i in range(548551):
 #for i in range(10):
 	#f.readline()
 	
-	x=readelement(f)
-	json.dump(x,write)
-	write.write("\n")
+	x=readelement(f,fcat,frev,fpro,fsim)
+	#json.dump(x,write)
+	#write.write("\n")
 #f.readline()
 #readelement(f)
 

@@ -1,1 +1,1 @@
-{"columns": ["ASIN", "COUNT(SIMILAR)"], "tables": "SIMILAR", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "ASIN", "func": "COUNT", "agg": "SIMILAR", "op": "<", "rhs": "3"}
+{"columns": "*", "tables": "SIMILAR", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "ASIN", "func": "COUNT", "agg": "SIMILAR", "op": "<", "rhs": "3"}

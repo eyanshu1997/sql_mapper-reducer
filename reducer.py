@@ -69,7 +69,7 @@ else:
 			if("*" in res[k]):
 				print("{}\t {}".format(k, val))			
 			else:
-				print("{}\t{}\t {}".format(k,",".join(res[k]), val))
+				print("{}\t{}\t{}".format(k,"\t".join(res[k]), val))
 		#print("yes")
 		
 			
