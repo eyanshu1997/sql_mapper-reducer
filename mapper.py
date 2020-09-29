@@ -40,7 +40,7 @@ def print_header(line):
 			selc.append(v);
 	else:
 		selc=se
-	print("{}###{}\t{}".format(",".join(selc),hav, agg_col))
+	#print("{}###{}\t{}".format(",".join(selc),hav, agg_col))
 	return selc
 	
 def run(line):
@@ -74,16 +74,16 @@ for x in sel:
 		if x!= agg_col:
 			se.append(x)
 
-#i=0
+i=0
 for li in sys.stdin:
 #		exit()
 #	i=i+1
 	line=json.loads(li)
 	#print(line)
-	#if(i==0):
-	#	selc=print_header(line)
+	if(i==0):
+		selc=print_header(line)
 		#print(selc)
-	#	i=i+1
+		i=i+1
 	run(line)
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

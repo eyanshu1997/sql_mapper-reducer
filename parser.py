@@ -20,12 +20,15 @@ def write_to_file(data):
 #	fil.wrtie("\n");
 	fil.close()
 	return data
+	
 def extractlhs_and_rhs(exp):
 	al_op = ['<=', '<', '==', '>', '>=','!=',"="]
 	for o in al_op:
 		if exp.find(o)!=-1:
 			lhs,rhs=exp.split(o)
 			return lhs.rstrip().lstrip(),o,rhs.rstrip().lstrip()
+			
+			
 def extractfunccol(lhs):
 	agg=["SUM","COUNT","MAX","MIN","AVG"]
 	hav=None
@@ -36,9 +39,12 @@ def extractfunccol(lhs):
 			e,f=re.split("\(",b)
 			c,d=re.split("\)",f)
 			return y,c
+			
+			
 def run_cmd(table):
-	command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
+	#command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
 	#print(command)
+	command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -mapper ~/code/python/hadoop/pro/mapper.py -reducer ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
 	start= time.time()
 	os.system(command)
 	time_delta = time.time() - start
@@ -53,7 +59,7 @@ def run_cmd(table):
 	os.system(cmd)
 	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rmdir /user/hadoop/out"
 	os.system(cmd)
-	print(res)
+	#print(res)
 	return res
 #	return "yes"
 	
@@ -96,10 +102,11 @@ def parse_query(query):
 		column.append(co.lstrip().rstrip())
 	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"wlhs":wlhs,"wo":wo,"wrhs":wrhs,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
-#	 bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file '/home/aurav/code/python/hadoop/pro/mapper.py' -mapper '/home/aurav/code/python/hadoop/pro/mapper.py' -file '/home/aurav/code/python/hadoop/pro/reducer.py' -reducer '/home/aurav/code/python/hadoop/pro/reducer.py' -input /user/eyanshu/smalldata.txt -output /user/eyanshu/out 
 	table=str(tables).lstrip().rstrip().lower()
 	result=run_cmd(table)
 	return result
+	
+	
 	#return data
 class RunQuery(Resource):
 	def get(self):

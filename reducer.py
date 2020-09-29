@@ -13,7 +13,7 @@ hav=config["agg"]
 func=config["func"]
 op=config["op"]
 #print(config)
-intval=["PID","VOTES","HELPFUL","RATING","SALESRANK"]
+intval=["PID","VOTES","HELPFUL","RATING","SALESRANK","CID","DEPTH"]
 #print(hav)
 def operate(v,ope):
 	if(ope=="SUM"):
