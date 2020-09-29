@@ -15,6 +15,7 @@ sel=config['columns']
 
 #print(sel)
 se=[]
+selc=[]
 agg_col=config['group']
 hav=config['agg']
 #se=[x in sel if x!=agg_col]
@@ -33,6 +34,15 @@ def oper(lhs,rhs,op):
 	
 
 #i=0;	
+def print_header(line):
+	if("*" in se):
+		for v in line.keys():
+			selc.append(v);
+	else:
+		selc=se
+	print("{}###{}\t{}".format(",".join(selc),hav, agg_col))
+	return selc
+	
 def run(line):
 	x=None
 	y=None
@@ -46,18 +56,14 @@ def run(line):
 			y=str(wrhs)
 		if(not oper(x,y,wo)):
 			return
-	sel_cols=[]
-	if("*" in se):
-		for k,v in line.items():
-			sel_cols.append(v);
-	else:
-		sel_cols = [line[x] for x in se]
+	
+	sel_cols = [line[x] for x in selc]
 	agg_cols = line[agg_col]
 	if(hav=="*"):
 		ha="*"
 	else:
 		ha=line[hav]
-	if(len(se)==0):
+	if(len(selc)==0):
 		print("{}###{}\t{}".format("*",ha, agg_cols))
 	else:
 		print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
@@ -67,16 +73,17 @@ for x in sel:
 	if hav not in x:
 		if x!= agg_col:
 			se.append(x)
-				
+
+#i=0
 for li in sys.stdin:
-#	if(i==200):
 #		exit()
 #	i=i+1
 	line=json.loads(li)
 	#print(line)
-	if "TITLE" in line.keys():
-		if line['TITLE']=="discontinued product":
-			continue
+	#if(i==0):
+	#	selc=print_header(line)
+		#print(selc)
+	#	i=i+1
 	run(line)
 
 # query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

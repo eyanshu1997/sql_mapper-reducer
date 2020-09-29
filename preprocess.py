@@ -19,7 +19,7 @@ def readelement(f,fcat,frev,fpro,fsim):
 	check=re.search("discontinued product",tl)
 	if(check!=None):
 		
-		element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":"discontinued product"}
+		element={"PID":id.rstrip(),"ASIN":amazonid.rstrip(),"TITLE":"discontinued product","GROUP":"0","SALESRANK":"0"}
 		json.dump(element,fpro)
 		fpro.write("\n")
 		return

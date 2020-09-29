@@ -37,14 +37,28 @@ def oper(val,ope):
 	#print(val,rhs)
 	#print(type(val),type(rhs))
 	return choice[op](val,rhs)
-	
+def print_header(s,h,g):
+	if(h=="*"):
+		if( s==""):
+			print(g)
+		else:
+			print("{}\t{}".format(g,s))
+	else:
+		if(s==""):
+			print("{}\t{}".format(g,h))
+		else:
+			print("{}\t{}\t{}".format(g,s,h))
 
-		
+#i=0;		
 for line in sys.stdin:
 	line = line.strip()
 	line = line.split('\t')
 	lin=line[0].split('###')
 	#print(line)
+	#if i==0:
+	#	print_header(lin[0],lin[1],line[1])
+	#	i=i+1
+	#	continue
 	if line[1] in res:
 		havar[str(line[1])].append(str(lin[1]))
 		res[str(line[1])].append(str(lin[0]))

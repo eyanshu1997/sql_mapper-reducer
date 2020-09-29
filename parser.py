@@ -3,7 +3,9 @@ from flask_restful import Resource, Api, reqparse
 import sqlparse
 import re
 import json
-
+import time
+import os
+import subprocess
 
 app = Flask(__name__)
 api = Api(app)
@@ -13,7 +15,7 @@ query = ""
 ps = reqparse.RequestParser()
 ps.add_argument('query')
 def write_to_file(data):
-	fil=open("mapperip.txt","w")
+	fil=open("/home/aurav/code/python/hadoop/pro/mapperip.txt","w")
 	json.dump(data,fil)
 #	fil.wrtie("\n");
 	fil.close()
@@ -34,6 +36,27 @@ def extractfunccol(lhs):
 			e,f=re.split("\(",b)
 			c,d=re.split("\)",f)
 			return y,c
+def run_cmd(table):
+	command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
+	#print(command)
+	start= time.time()
+	os.system(command)
+	time_delta = time.time() - start
+	cat = subprocess.Popen(["/home/aurav/hadoop-3.3.0/bin/hadoop", "fs", "-cat", "/user/hadoop/out/part-00000"], stdout=subprocess.PIPE)
+	res=""
+	for line in cat.stdout:
+		temp_dict =  line.decode('utf-8').rstrip()
+		#temp_dict = dict(zip(col_names, line.decode('utf-8').split('\n')[0].replace(",", "\t").split('\t')))	
+		#print(temp_dict)
+		res+=str(temp_dict)+"\n";
+	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rm /user/hadoop/out/*"
+	os.system(cmd)
+	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rmdir /user/hadoop/out"
+	os.system(cmd)
+	print(res)
+	return res
+#	return "yes"
+	
 def parse_query(query):
 	parsed=sqlparse.parse(query.upper().rstrip().lstrip())
 	stmt=parsed[0]
@@ -49,7 +72,7 @@ def parse_query(query):
 		wo="*"
 		wrhs="*"
 	else:
-		print(where)
+		#print(where)
 		wlhs,wo,wrhs=extractlhs_and_rhs(str(where))
 		#print(lhs,o,rhs)
 	columns=str(columns)
@@ -71,21 +94,13 @@ def parse_query(query):
 		func,agg=extractfunccol(lhs)
 	for co in columns:
 		column.append(co.lstrip().rstrip())
-	#print(column)
-	#print(tables)
-	#print(where)
-	#print(group)
-	#print(compar)
 	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"wlhs":wlhs,"wo":wo,"wrhs":wrhs,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
 	write_to_file( data)
 #	 bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file '/home/aurav/code/python/hadoop/pro/mapper.py' -mapper '/home/aurav/code/python/hadoop/pro/mapper.py' -file '/home/aurav/code/python/hadoop/pro/reducer.py' -reducer '/home/aurav/code/python/hadoop/pro/reducer.py' -input /user/eyanshu/smalldata.txt -output /user/eyanshu/out 
-
-	#command = 'hadoop jar {hadoop_streaming_jar} -mapper "python mapper.py" -reducer "python reducer.py" -input jsonresult.txt -output /{parent}/{outputdir}'.format( parent=self.parentdir, hadoop_streaming_jar=self.hadoop_streaming_jar, outputdir=self.outputdir)
-	#start= time.time()
-	#os.system(command)
-	#time_delta = time.time() - start
-	return data
-
+	table=str(tables).lstrip().rstrip().lower()
+	result=run_cmd(table)
+	return result
+	#return data
 class RunQuery(Resource):
 	def get(self):
 		return("use post method")
