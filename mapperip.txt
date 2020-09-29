@@ -1,1 +1,1 @@
-{"columns": ["ASIN", "COUNT(SIMILAR)"], "tables": "SIMILAR", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "ASIN", "func": "COUNT", "agg": "SIMILAR", "op": "<", "rhs": "3"}
+{"columns": ["PID", "TITLE", "MIN(SALESRANK)"], "tables": "PRODUCTS", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "PID", "func": "MIN", "agg": "SALESRANK", "op": ">", "rhs": "200000"}

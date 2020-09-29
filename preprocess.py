@@ -48,24 +48,24 @@ def readelement(f,fcat,frev,fpro,fsim):
 	x,c=re.split(": ",cil)
 	#print(c.rstrip())
 	#categories=[]
+	cnames=set()
 	for i in range(int(c)):
 		ce=f.readline()
 		cats=ce.split("|")
-		depth=0
-		pi=0
 		for a in cats:
 			#print(a)
 			if("["in a):
 				#print(a)
 				na,ci=a.rsplit("[",1)
 				ci,x=re.split("\]",ci)
+				cnames.add("{}####{}".format(ci,na))
 			#print(na,ci,depth)
 #			categories.append()
-				z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"CATNAME":na,"DEPTH":depth,"CID":ci,"PID":pi}
-				pi=ci
-				json.dump(z,fcat)
-				fcat.write("\n")
-				depth=depth+1
+	for a in cnames:
+		na,ci=a.split("####")
+		z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"CATNAME":na,"CID":ci}
+		json.dump(z,fcat)
+		fcat.write("\n")	
 	#print(categories)
 	cil=f.readline()	
 	r,t,c,d,dc=re.split(": ",cil)
