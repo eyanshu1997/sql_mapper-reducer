@@ -79,12 +79,18 @@ else:
 	for k, v in havar.items():
 		#print(val)
 		val=operate(v,func)
-		if oper(val,func):
+		if(op=="*"):
 			if("*" in res[k]):
 				print("{}\t {}".format(k, val))			
 			else:
 				print("{}\t{}\t{}".format(k,"\t".join(res[k]), val))
-		#print("yes")
+		else:
+			if oper(val,func):
+				if("*" in res[k]):
+					print("{}\t {}".format(k, val))			
+				else:
+					print("{}\t{}\t{}".format(k,"\t".join(res[k]), val))
+			#print("yes")
 		
 			
 

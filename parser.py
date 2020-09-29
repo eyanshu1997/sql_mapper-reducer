@@ -22,7 +22,7 @@ def write_to_file(data):
 	return data
 	
 def extractlhs_and_rhs(exp):
-	al_op = ['<=', '<', '==', '>', '>=','!=',"="]
+	al_op = ['<=', '==', '>=', '>', '<','!=',"="]
 	for o in al_op:
 		if exp.find(o)!=-1:
 			lhs,rhs=exp.split(o)
@@ -99,7 +99,6 @@ def parse_query(query):
 	compar=str(compar)
 	if(compar=="*"):
 		func="*"
-		add="*"
 		o="*"
 		rhs="*"
 		agg="*"
@@ -110,15 +109,27 @@ def parse_query(query):
 		lhs,o,rhs=extractlhs_and_rhs(compar)
 		func,agg=extractfunccol(lhs)
 	for co in columns:
-		column.append(co.lstrip().rstrip())
+		co=co.lstrip().rstrip()
+		if '('in co:
+			x,h=re.split('\(',co)
+			h,z=re.split('\)',h)
+			if(agg=='*' and func=='*'):
+				agg=h
+				func=x
+			elif (agg==h and func==x):
+				continue
+			else:
+				return "wrong query two agg func used"
+		else: 
+			column.append(co)
 	gr=[]
 	for g in str(group).split(','):
 		gr.append(g.rstrip().lstrip())
 	data={"columns":column, "tables":str(tables).lstrip().rstrip(), "wlhs":wlhs, "wo":wo, "wrhs":wrhs, "group":gr, "func":func, "agg":agg, "op":o, "rhs":rhs}
 	write_to_file( data)
 	table=str(tables).lstrip().rstrip().lower()
-	result=run_cmd(table)
-	res=spark()
+	#result=run_cmd(table)
+	#res=spark()
 	#result=""
 	#return result+res
 	return "yes"
