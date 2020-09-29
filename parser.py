@@ -40,7 +40,17 @@ def extractfunccol(lhs):
 			c,d=re.split("\)",f)
 			return y,c
 			
-			
+					
+def spark():
+	command="/home/aurav/hadoop-3.3.0/spark-3.0.1-bin-hadoop3.2/bin/spark-submit /home/aurav/code/python/hadoop/pro/spark_run.py"
+	os.system(command)
+	#fi=open("/home/aurav/code/python/hadoop/pro/sparkresult.csv","r")
+	#res=""
+	#for li in fi:
+	#	res.append(li)
+	#return res
+	return "ye"
+	
 def run_cmd(table):
 	#command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
 	#print(command)
@@ -72,6 +82,7 @@ def parse_query(query):
 	group=stmt.tokens[11]
 	compar=stmt.tokens[-1]
 	where=str(where)
+	#print(where)
 	wh,where=where.split()
 	if(where=="*"):
 		wlhs="*"
@@ -100,12 +111,14 @@ def parse_query(query):
 		func,agg=extractfunccol(lhs)
 	for co in columns:
 		column.append(co.lstrip().rstrip())
-	data={"columns":column,"tables":str(tables).lstrip().rstrip(),"wlhs":wlhs,"wo":wo,"wrhs":wrhs,"group":str(group).lstrip().rstrip(),"func":func,"agg":agg,"op":o,"rhs":rhs}
+	data={"columns":column, "tables":str(tables).lstrip().rstrip(), "wlhs":wlhs, "wo":wo, "wrhs":wrhs, "group":str(group).lstrip().rstrip(), "func":func, "agg":agg, "op":o, "rhs":rhs}
 	write_to_file( data)
 	table=str(tables).lstrip().rstrip().lower()
-	result=run_cmd(table)
-	return result
-	
+	#result=run_cmd(table)
+	res=spark()
+	#result=""
+	#return result+res
+	return "yes"
 	
 	#return data
 class RunQuery(Resource):
