@@ -63,7 +63,7 @@ def readelement(f,fcat,frev,fpro,fsim):
 #			categories.append()
 	for a in cnames:
 		na,ci=a.split("####")
-		z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"CATNAME":na,"CID":ci}
+		z={"ASIN":amazonid.rstrip(),"PID":id.rstrip(),"CID":na,"CATNAME":ci}
 		json.dump(z,fcat)
 		fcat.write("\n")	
 	#print(categories)
