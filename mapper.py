@@ -28,6 +28,13 @@ wo=config['wo']
 wrhs=config['wrhs']
 intval=["PID","VOTES","HELPFUL","RATING","SALESRANK"]
 
+
+
+for x in sel:
+	if hav not in x:
+		if x not in agg_col:
+			se.append(x)
+			
 def oper(lhs,rhs,op):
 	choice={ '<':  operator.lt,'<=': operator.le,'>':  operator.gt,'>=': operator.ge,'==': operator.eq,'!=': operator.ne,"=":operator.eq}
 	return choice[op](lhs,rhs)
@@ -58,22 +65,17 @@ def run(line):
 			return
 	
 	sel_cols = [line[x] for x in selc]
-	agg_cols = line[agg_col]
+	agg_cols = [line[x] for x in agg_col]
 	if(hav=="*"):
 		ha="*"
 	else:
 		ha=line[hav]
 	if(len(selc)==0):
-		print("{}###{}\t{}".format("*",ha, agg_cols))
+		print("{}###{}\t{}".format("*",ha, ",".join(agg_cols)))
 	else:
-		print("{}###{}\t{}".format(",".join(sel_cols),ha, agg_cols))
-		
-	
-for x in sel:
-	if hav not in x:
-		if x!= agg_col:
-			se.append(x)
+		print("{}###{}\t{}".format(",".join(sel_cols),ha,",".join(agg_cols)))
 
+# query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'
 i=0
 for li in sys.stdin:
 #		exit()
@@ -85,5 +87,3 @@ for li in sys.stdin:
 		#print(selc)
 		i=i+1
 	run(line)
-
-# query = 'SELECT MOVIEID,SUM(RATING) FROM RATING GROUPBY MOVIEID HAVING SUM(RATING) > 1000'

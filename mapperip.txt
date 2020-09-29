@@ -1,1 +1,1 @@
-{"columns": ["COUNT(PID)", "GROUP"], "tables": "PRODUCTS", "wlhs": "*", "wo": "*", "wrhs": "*", "group": "GROUP", "func": "COUNT", "agg": "PID", "op": ">", "rhs": "2"}
+{"columns": ["USERID", "TIME", "COUNT(ASIN)"], "tables": "REVIEWS", "wlhs": "*", "wo": "*", "wrhs": "*", "group": ["USERID", "TIME"], "func": "*", "agg": "*", "op": "*", "rhs": "*"}

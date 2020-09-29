@@ -111,10 +111,13 @@ def parse_query(query):
 		func,agg=extractfunccol(lhs)
 	for co in columns:
 		column.append(co.lstrip().rstrip())
-	data={"columns":column, "tables":str(tables).lstrip().rstrip(), "wlhs":wlhs, "wo":wo, "wrhs":wrhs, "group":str(group).lstrip().rstrip(), "func":func, "agg":agg, "op":o, "rhs":rhs}
+	gr=[]
+	for g in str(group).split(','):
+		gr.append(g.rstrip().lstrip())
+	data={"columns":column, "tables":str(tables).lstrip().rstrip(), "wlhs":wlhs, "wo":wo, "wrhs":wrhs, "group":gr, "func":func, "agg":agg, "op":o, "rhs":rhs}
 	write_to_file( data)
 	table=str(tables).lstrip().rstrip().lower()
-	#result=run_cmd(table)
+	result=run_cmd(table)
 	res=spark()
 	#result=""
 	#return result+res
