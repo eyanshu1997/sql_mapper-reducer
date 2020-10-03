@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request,jsonify
 from flask_restful import Resource, Api, reqparse
 import sqlparse
 import re
@@ -25,12 +25,12 @@ def re_print_header(s,h,g):
 		if( s==""):
 			return g
 		else:
-			return "{}\t{}".format(g,s)
+			return "{}    {}".format(g,s)
 	else:
 		if(s==""):
-			return "{}\t{}".format(g,h)
+			return "{}    {}".format(g,h)
 		else:
-			return "{}\t{}\t{}".format(g,s,h)
+			return "{}    {}   {}".format(g,s,h)
 	
 def ma_print_header(data,table):
 	fi=open("/home/aurav/code/python/hadoop/pro/data/{}.txt".format(table))
@@ -49,21 +49,25 @@ def ma_print_header(data,table):
 	else:
 		selc=se
 	
-	return "{}###{}\t{}".format(",".join(selc),hav, ",".join(agg_col))
+	return "{}###{}     {}".format(",".join(selc),hav, ",".join(agg_col))
 
 def heade(data,table):
 	x=ma_print_header(data,table)
 	line = x.strip()
-	line = line.split('\t')
+	line = line.split('     ')
 	lin=line[0].split('###')
 	s=lin[0]
 	h=lin[1]
 	g=line[1]
-	re1="select columns :{} \nhaving/aggrigation column : {} \n group column: {}\n".format(s,h,g)
+	re1={"select columns" :s.replace('\t',"   ")," having/aggrigation column ": h.replace('\t',"   "),"  group column": g.replace('\t',"   ")}
 	y=re_print_header(s,h,g)
 	line=y.strip()
-	line=line.split('\t')	
-	re2="group by columns : {} \n select column : {}\n".format(line[0],line[1])
+	line=line.split('    ')
+	re2={}
+	if len(line)==1:
+		re2={"group by columns" :line[0].replace('\t',"   "),   "select column ":line[1].replace('\t',"   ")}
+	else:
+		re2={"reducer result groupby columns" :line[0].replace('\t',"   ")}
 	return re1,re2
 	
 def extractlhs_and_rhs(exp):
@@ -86,11 +90,12 @@ def extractfunccol(lhs):
 			return y,c
 def spark_out():
 	path=subprocess.check_output("ls /home/aurav/code/python/hadoop/pro/*.csv/*.csv", shell=True).splitlines()[0]
-	print(path)
+	#print(path)
 	fi=open(path,"r")
-	res=""
+	res=[]
 	for line in fi:
-		res+=line
+		res.append(line.rstrip().replace('\t','    ').lstrip())
+		
 	return 	res
 def spark():
 	s=time.time()
@@ -106,12 +111,13 @@ def spark():
 
 def cmd_output():
 	cat = subprocess.Popen(["/home/aurav/hadoop-3.3.0/bin/hadoop", "fs", "-cat", "/user/hadoop/out/part-00000"], stdout=subprocess.PIPE)
-	res=""
+	res=[]
 	for line in cat.stdout:
-		temp_dict =  line.decode('utf-8').rstrip()
+		t =  line.decode('utf-8')
+		x=str(t).replace("\t", "    ").rstrip().replace("\n","")
 		#temp_dict = dict(zip(col_names, line.decode('utf-8').split('\n')[0].replace(",", "\t").split('\t')))	
 		#print(temp_dict)
-		res+=str(temp_dict)+"\n";
+		res.append(x);
 	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rm /user/hadoop/out/*"
 	os.system(cmd)
 	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rmdir /user/hadoop/out"
@@ -119,7 +125,7 @@ def cmd_output():
 	return res
 
 def spark_trans():
-	fi=open("~/code/python/hadoop/pro/spark_transformation.txt","r")
+	fi=open("/home/aurav/code/python/hadoop/pro/spark_transformations.txt","r")
 	li=fi.readline()
 	res=json.loads(li)
 	return 	res
@@ -203,11 +209,8 @@ def parse_query(query):
 	res2=spark_out()
 	restr1=spark_trans()
 	restr2,restr3=heade(data,table)
-	ret="mapper : \n"+restr2+"reducer: \n "+restr3
-	#result=""
-	#return result+res
-	#print(res2)
-	return {"mapper reducer time":t1,"spark time" :t2,"mapper reducer output":res1,"spark output":res2," spark transformations" :restr1,"mapper reducer intermediate outputs":ret}
+	ret={"mapper : ":restr2,"reducer:  ":restr3}
+	return jsonify({"mapper reducer time":t1,"spark time" :t2,"mapper reducer output":res1,"spark output":res2," spark transformations" :restr1,"mapper reducer intermediate outputs":ret})
 	
 	#return data
 class RunQuery(Resource):

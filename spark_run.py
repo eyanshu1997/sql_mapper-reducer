@@ -41,7 +41,7 @@ with open("/home/aurav/code/python/hadoop/pro/mapperip.txt","r") as file:
 	op=jfile["op"]
 	rhs=jfile["rhs"]
 
-table_name="/home/aurav/code/python/hadoop/pro/data/"+tables+".txt"
+table_name="/home/aurav/code/python/hadoop/pro/data/"+tables.rstrip().lstrip().lower()+".txt"
 intval=["CID","PID","VOTES","HELPFUL","RATING","SALESRANK"]
 	
 df = spark.read.format("json").option("header",True).load(table_name)
@@ -134,15 +134,17 @@ if group_by_flag:
 			having="agg(count({agg}))".format(agg=agg)
 
 transformation["HAVING"]=having
+df.repartition(1).write.csv('/home/aurav/code/python/hadoop/pro/sparkresult.csv',sep='\t')
+
 print(transformation)
 
 st =  open("/home/aurav/code/python/hadoop/pro/spark_transformations.txt","w") 
 #st.write(json_object)
-json_object = json.dump(transformation,st) 
+json_object = json.dump(transformation,st)
 #df.show(truncate=False)
 #df.printSchema()
 #df.toPandas().to_csv('mycsv.csv')
-#df.write.csv('mycsv.csv')
+#df.partition(1).write.csv('/home/aurav/code/python/hadoop/pro/mycsv.csv')
 """
 df.filter(col("PID") == "1").show(truncate=False)
 """
