@@ -37,17 +37,7 @@ def oper(val,ope):
 	#print(val,rhs)
 	#print(type(val),type(rhs))
 	return choice[op](val,rhs)
-def print_header(s,h,g):
-	if(h=="*"):
-		if( s==""):
-			print(g)
-		else:
-			print("{}\t{}".format(g,s))
-	else:
-		if(s==""):
-			print("{}\t{}".format(g,h))
-		else:
-			print("{}\t{}\t{}".format(g,s,h))
+
 
 #i=0;		
 for line in sys.stdin:

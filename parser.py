@@ -20,6 +20,51 @@ def write_to_file(data):
 #	fil.wrtie("\n");
 	fil.close()
 	return data
+def re_print_header(s,h,g):
+	if(h=="*"):
+		if( s==""):
+			return g
+		else:
+			return "{}\t{}".format(g,s)
+	else:
+		if(s==""):
+			return "{}\t{}".format(g,h)
+		else:
+			return "{}\t{}\t{}".format(g,s,h)
+	
+def ma_print_header(data,table):
+	fi=open("/home/aurav/code/python/hadoop/pro/data/{}.txt".format(table))
+	sel=data['columns']
+	agg_col=data['group']
+	se=[]
+	hav=data['agg']
+	selc=[]
+	for x in sel:
+		if hav not in x:
+			if x not in agg_col:
+				se.append(x)
+	if("*" in se):
+		for v in line.keys():
+			selc.append(v);
+	else:
+		selc=se
+	
+	return "{}###{}\t{}".format(",".join(selc),hav, ",".join(agg_col))
+
+def heade(data,table):
+	x=ma_print_header(data,table)
+	line = x.strip()
+	line = line.split('\t')
+	lin=line[0].split('###')
+	s=lin[0]
+	h=lin[1]
+	g=line[1]
+	re1="select columns :{} \nhaving/aggrigation column : {} \n group column: {}\n".format(s,h,g)
+	y=re_print_header(s,h,g)
+	line=y.strip()
+	line=line.split('\t')	
+	re2="group by columns : {} \n select column : {}\n".format(line[0],line[1])
+	return re1,re2
 	
 def extractlhs_and_rhs(exp):
 	al_op = ['<=', '==', '>=', '>', '<','!=',"="]
@@ -39,25 +84,27 @@ def extractfunccol(lhs):
 			e,f=re.split("\(",b)
 			c,d=re.split("\)",f)
 			return y,c
-			
-					
+def spark_out():
+	path=subprocess.check_output("ls /home/aurav/code/python/hadoop/pro/*.csv/*.csv", shell=True).splitlines()[0]
+	print(path)
+	fi=open(path,"r")
+	res=""
+	for line in fi:
+		res+=line
+	return 	res
 def spark():
+	s=time.time()
 	command="/home/aurav/hadoop-3.3.0/spark-3.0.1-bin-hadoop3.2/bin/spark-submit /home/aurav/code/python/hadoop/pro/spark_run.py"
 	os.system(command)
+	
 	#fi=open("/home/aurav/code/python/hadoop/pro/sparkresult.csv","r")
 	#res=""
 	#for li in fi:
 	#	res.append(li)
 	#return res
-	return "ye"
-	
-def run_cmd(table):
-	#command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
-	#print(command)
-	command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -mapper ~/code/python/hadoop/pro/mapper.py -reducer ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
-	start= time.time()
-	os.system(command)
-	time_delta = time.time() - start
+	return time.time()-s
+
+def cmd_output():
 	cat = subprocess.Popen(["/home/aurav/hadoop-3.3.0/bin/hadoop", "fs", "-cat", "/user/hadoop/out/part-00000"], stdout=subprocess.PIPE)
 	res=""
 	for line in cat.stdout:
@@ -69,8 +116,23 @@ def run_cmd(table):
 	os.system(cmd)
 	cmd="/home/aurav/hadoop-3.3.0/bin/hdfs dfs -rmdir /user/hadoop/out"
 	os.system(cmd)
-	#print(res)
 	return res
+
+def spark_trans():
+	fi=open("~/code/python/hadoop/pro/spark_transformation.txt","r")
+	li=fi.readline()
+	res=json.loads(li)
+	return 	res
+
+def run_cmd(table):
+	#command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -file ~/code/python/hadoop/pro/mapper.py    -mapper  ~/code/python/hadoop/pro/mapper.py -file  ~/code/python/hadoop/pro/reducer.py -reducer  ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
+	#print(command)
+	command = "/home/aurav/hadoop-3.3.0/bin/hadoop jar /home/aurav/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -mapper ~/code/python/hadoop/pro/mapper.py -reducer ~/code/python/hadoop/pro/reducer.py -input /user/hadoop/{ip}.txt -output /user/hadoop/out".format(ip=table)
+	start= time.time()
+	os.system(command)
+	time_delta = time.time() - start
+	#print(res)
+	return time_delta
 #	return "yes"
 	
 def parse_query(query):
@@ -128,11 +190,24 @@ def parse_query(query):
 	data={"columns":column, "tables":str(tables).lstrip().rstrip(), "wlhs":wlhs, "wo":wo, "wrhs":wrhs, "group":gr, "func":func, "agg":agg, "op":o, "rhs":rhs}
 	write_to_file( data)
 	table=str(tables).lstrip().rstrip().lower()
-	#result=run_cmd(table)
-	#res=spark()
+	
+	# yaha see
+	# karna hai
+	# 
+	# 
+	
+	
+	t1=run_cmd(table)
+	t2=spark()
+	res1=cmd_output()
+	res2=spark_out()
+	restr1=spark_trans()
+	restr2,restr3=heade(data,table)
+	ret="mapper : \n"+restr2+"reducer: \n "+restr3
 	#result=""
 	#return result+res
-	return "yes"
+	#print(res2)
+	return {"mapper reducer time":t1,"spark time" :t2,"mapper reducer output":res1,"spark output":res2," spark transformations" :restr1,"mapper reducer intermediate outputs":ret}
 	
 	#return data
 class RunQuery(Resource):
